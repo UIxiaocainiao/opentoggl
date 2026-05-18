@@ -1,230 +1,74 @@
 /* ============================================
-   OpenToggl 自定义样式 — 参照 Open WebUI 深色主题
-   修改后运行 ./ship.sh "更新样式" 即可生效
+   OpenToggl 全局样式 — Open WebUI 深色主题
+   使用 !important + 通用选择器确保覆盖 SPA 样式
    ============================================ */
 
-/* ---- CSS 变量 (Open WebUI 色板) ---- */
-:root {
-  --gray-50:  #f9fafb;
-  --gray-100: #f3f4f6;
-  --gray-200: #e5e7eb;
-  --gray-300: #d1d5db;
-  --gray-400: #9ca3af;
-  --gray-500: #6b7280;
-  --gray-600: #4b5563;
-  --gray-700: #374151;
-  --gray-800: #1f2937;
-  --gray-850: #1a1a1a;
-  --gray-900: #171717;
-  --gray-950: #0d0d0d;
-
-  --bg-primary:   var(--gray-900);
-  --bg-secondary: var(--gray-950);
-  --bg-card:      var(--gray-850);
-  --bg-hover:     var(--gray-800);
-  --text-primary: #eee;
-  --text-secondary: #9ca3af;
-  --text-muted:   #6b7280;
-  --border-color: var(--gray-800);
-  --border-subtle: rgba(255,255,255,0.05);
-  --accent:       #60a5fa;
-  --accent-hover: #93bbfd;
-  --accent-subtle: rgba(96,165,250,0.12);
-  --radius:       12px;
-  --radius-sm:    8px;
-  --radius-xs:    6px;
-}
-
-/* ---- 全局覆盖 ---- */
-body {
-  background: var(--bg-primary) !important;
-  color: var(--text-primary) !important;
+/* ---- 全局基础 (最明显的改动) ---- */
+html, body, #app, #root {
+  background: #171717 !important;
+  color: #eee !important;
   font-family: Inter, system-ui, -apple-system, sans-serif !important;
 }
 
-/* ---- 卡片和面板 ---- */
-[class*="card"], [class*="Card"],
-[class*="panel"], [class*="Panel"],
-[class*="box"],  [class*="Box"],
-.bg-white, .bg-gray-50,
-[style*="background"] {
-  background-color: var(--bg-card) !important;
-  border-color: var(--border-color) !important;
-  border-radius: var(--radius) !important;
+/* ---- 所有 div 底色统一 ---- */
+div {
+  background-color: transparent !important;
 }
 
-/* 顶层容器背景变暗 */
-main, [class*="main"],
-[class*="container"], [class*="Container"] {
-  background: var(--bg-primary) !important;
+/* ---- 主题色变量覆盖 ---- */
+* {
+  --primary: #60a5fa;
+  --primary-hover: #93bbfd;
+  --bg-primary: #171717;
+  --bg-secondary: #0d0d0d;
+  --bg-card: #1a1a1a;
+  --border-color: #1f2937;
+  --text-primary: #eee;
+  --text-secondary: #9ca3af;
+  --text-muted: #6b7280;
 }
 
-/* ---- 导航 / 顶栏 ---- */
-nav, [class*="nav"], [class*="Nav"],
-header, [class*="header"], [class*="Header"],
-[class*="sidebar"], [class*="Sidebar"],
-[class*="topbar"], [class*="Topbar"] {
-  background: var(--bg-secondary) !important;
-  border-color: var(--border-subtle) !important;
-}
-
-/* ---- 输入框 ---- */
-input, textarea, select,
-[class*="input"], [class*="Input"],
-[class*="textarea"], [class*="Textarea"] {
-  background: var(--gray-950) !important;
-  color: var(--text-primary) !important;
-  border: 1px solid var(--border-color) !important;
-  border-radius: var(--radius-sm) !important;
-  outline: none !important;
-}
-input:focus, textarea:focus, select:focus,
-[class*="input"]:focus-within {
-  border-color: var(--accent) !important;
-  box-shadow: 0 0 0 1px var(--accent) !important;
-}
-input::placeholder, textarea::placeholder {
-  color: var(--text-muted) !important;
-}
-
-/* ---- 按钮基础 ---- */
-button, [class*="btn"], [class*="Button"],
-[role="button"] {
-  border-radius: var(--radius-sm) !important;
+/* ---- 所有按钮 ---- */
+button, [role="button"], a[href] {
+  border-radius: 8px !important;
   font-weight: 500 !important;
   transition: all 0.15s ease !important;
 }
 
-/* 主按钮 */
-button[type="submit"],
-[class*="primary"], [class*="Primary"],
-.btn-primary, .button-primary {
-  background: var(--accent) !important;
-  border-color: var(--accent) !important;
-  color: #fff !important;
+/* ---- 所有输入框 ---- */
+input, textarea, select {
+  background: #0d0d0d !important;
+  color: #eee !important;
+  border: 1px solid #1f2937 !important;
+  border-radius: 8px !important;
 }
-button[type="submit"]:hover,
-[class*="primary"]:hover, [class*="Primary"]:hover,
-.btn-primary:hover {
-  background: var(--accent-hover) !important;
-  border-color: var(--accent-hover) !important;
+input:focus, textarea:focus, select:focus {
+  border-color: #60a5fa !important;
+  box-shadow: 0 0 0 1px #60a5fa !important;
+  outline: none !important;
 }
-
-/* 次要按钮 */
-button:not([type="submit"]):not([class*="primary"]):not([class*="Primary"]),
-[class*="secondary"], [class*="Secondary"],
-.btn-secondary {
-  background: var(--bg-hover) !important;
-  border-color: var(--border-color) !important;
-  color: var(--text-primary) !important;
-}
-button:not([type="submit"]):not([class*="primary"]):hover,
-[class*="secondary"]:hover,
-.btn-secondary:hover {
-  background: var(--gray-700) !important;
-  border-color: var(--gray-600) !important;
+input::placeholder, textarea::placeholder {
+  color: #6b7280 !important;
 }
 
 /* ---- 链接 ---- */
-a, [class*="link"], [class*="Link"] {
-  color: var(--accent) !important;
-  text-decoration: none !important;
-}
-a:hover {
-  color: var(--accent-hover) !important;
-}
+a { color: #60a5fa !important; text-decoration: none !important; }
+a:hover { color: #93bbfd !important; }
 
 /* ---- 表格 ---- */
-table, [class*="table"], [class*="Table"] {
-  background: var(--bg-card) !important;
-  border-color: var(--border-color) !important;
-  border-radius: var(--radius) !important;
-}
-th {
-  background: var(--bg-secondary) !important;
-  color: var(--text-secondary) !important;
-  font-weight: 500 !important;
-  border-color: var(--border-color) !important;
-}
-td {
-  border-color: var(--border-subtle) !important;
-  color: var(--text-primary) !important;
-}
-tr:hover td {
-  background: var(--bg-hover) !important;
-}
+table { background: #1a1a1a !important; border-radius: 12px !important; }
+th { background: #0d0d0d !important; color: #9ca3af !important; font-weight: 500 !important; }
+td { color: #eee !important; border-color: rgba(255,255,255,0.05) !important; }
 
-/* ---- 模态弹窗 ---- */
-[class*="modal"], [class*="Modal"],
-[class*="dialog"], [class*="Dialog"],
-[class*="popover"], [class*="Popover"] {
-  background: var(--bg-card) !important;
-  border: 1px solid var(--border-color) !important;
-  border-radius: var(--radius) !important;
-  box-shadow: 0 16px 48px rgba(0,0,0,0.5) !important;
-}
-
-/* ---- 下拉菜单 ---- */
-[class*="dropdown"], [class*="Dropdown"],
-[class*="menu"], [class*="Menu"],
-select {
-  background: var(--bg-card) !important;
-  border: 1px solid var(--border-color) !important;
-  border-radius: var(--radius-sm) !important;
-  color: var(--text-primary) !important;
-}
-[class*="dropdown"] [class*="item"]:hover,
-[class*="menu"] [class*="item"]:hover,
-option:hover {
-  background: var(--accent-subtle) !important;
-}
-
-/* ---- 标签 / 徽章 ---- */
-[class*="badge"], [class*="Badge"],
-[class*="tag"], [class*="Tag"],
-[class*="chip"], [class*="Chip"] {
-  background: var(--bg-hover) !important;
-  color: var(--text-secondary) !important;
-  border-radius: var(--radius-xs) !important;
-  border: none !important;
-}
-
-/* ---- 分割线 ---- */
-hr, [class*="divider"], [class*="Divider"],
-[class*="separator"], [class*="Separator"] {
-  border-color: var(--border-subtle) !important;
-}
-
-/* ---- 滚动条 (Open WebUI 风格) ---- */
-::-webkit-scrollbar {
-  width: 0.45rem !important;
-  height: 0.45rem !important;
-}
-::-webkit-scrollbar-track {
-  background: transparent !important;
-}
-::-webkit-scrollbar-thumb {
-  background: rgba(67, 67, 67, 0.6) !important;
-  border-radius: 3px !important;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(115, 115, 115, 0.6) !important;
-}
+/* ---- 滚动条 (Open WebUI 风格 - 0.45rem) ---- */
+::-webkit-scrollbar { width: 0.45rem !important; height: 0.45rem !important; }
+::-webkit-scrollbar-track { background: transparent !important; }
+::-webkit-scrollbar-thumb { background: rgba(67,67,67,0.6) !important; border-radius: 3px !important; }
 
 /* ---- 选中文字 ---- */
-::selection {
-  background: var(--accent-subtle) !important;
-  color: var(--text-primary) !important;
-}
+::selection { background: rgba(96,165,250,0.2) !important; color: #eee !important; }
 
-/* ---- 过渡动画 ---- */
-* {
-  transition-property: background-color, border-color, color, box-shadow;
-  transition-duration: 0.15s;
-  transition-timing-function: ease;
-}
-
-/* ---- 阴影统一 ---- */
-[class*="shadow"], [class*="Shadow"] {
-  box-shadow: 0 2px 8px rgba(0,0,0,0.3) !important;
+/* ---- 所有卡片/面板/容器圆角 ---- */
+[class] {
+  border-radius: 8px;
 }
