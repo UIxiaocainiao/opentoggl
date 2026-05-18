@@ -64,13 +64,30 @@ services:
       redis:
         condition: service_healthy
     networks: [internal]
-    ports:
-      - "${OPENTOGGL_PORT:-8080}:8080"
+    expose:
+      - "8080"
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8080/readyz"]
       interval: 5s
       timeout: 3s
       retries: 20
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "${OPENTOGGL_PORT:-8080}:8080"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./nginx/custom.css:/usr/share/nginx/html/custom.css:ro
+    depends_on:
+      - opentoggl
+    networks: [internal]
     logging:
       driver: json-file
       options:
