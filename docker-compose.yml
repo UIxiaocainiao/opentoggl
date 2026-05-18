@@ -1,0 +1,86 @@
+name: opentoggl-self-hosted
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: opentoggl
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${OPENTOGGL_POSTGRES_PASSWORD:-postgres}
+    networks: [internal]
+    volumes:
+      - opentoggl-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d opentoggl"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    restart: unless-stopped
+
+  redis:
+    image: redis:8-alpine
+    command:
+      [
+        "redis-server",
+        "--save",
+        "",
+        "--appendonly",
+        "no",
+        "--requirepass",
+        "${OPENTOGGL_REDIS_PASSWORD:-opentoggl}",
+      ]
+    environment:
+      REDISCLI_AUTH: ${OPENTOGGL_REDIS_PASSWORD:-opentoggl}
+    networks: [internal]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    restart: unless-stopped
+
+  opentoggl:
+    image: correctroad/opentoggl:latest
+    environment:
+      OPENTOGGL_SERVICE_NAME: opentoggl
+      PORT: "8080"
+      DATABASE_URL: postgres://postgres:${OPENTOGGL_POSTGRES_PASSWORD:-postgres}@postgres:5432/opentoggl?sslmode=disable
+      REDIS_URL: redis://:${OPENTOGGL_REDIS_PASSWORD:-opentoggl}@redis:6379/0
+      OPENTOGGL_FILESTORE_NAMESPACE: opentoggl
+      OPENTOGGL_JOBS_QUEUE_NAME: default
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks: [internal]
+    ports:
+      - "${OPENTOGGL_PORT:-8080}:8080"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8080/readyz"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    restart: unless-stopped
+
+networks:
+  internal:
+    driver: bridge
+
+volumes:
+  opentoggl-postgres-data:
